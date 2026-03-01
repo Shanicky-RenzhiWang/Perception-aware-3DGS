@@ -1,0 +1,9 @@
+[submodule "S3Gaussian"]
+	path = S3Gaussian
+	url = https://github.com/Shanicky-RenzhiWang/S3Gaussian_with_perception_optim.git
+[submodule "EMD"]
+	path = EMD
+	url = https://github.com/Shanicky-RenzhiWang/EMD_with_perception_optim.git
+[submodule "OmniRe"]
+	path = OmniRe
+	url = https://github.com/Shanicky-RenzhiWang/OmniRe_with_perception_optim.git
