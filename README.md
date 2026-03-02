@@ -4,7 +4,7 @@ Official implementation of the ICLR 2026 paper:
 
 > **Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving**  
 > [Paper](https://openreview.net/forum?id=PmQlMTBmpa)  
-> [Renzhi Wang](https://renzhiwang.xyz/), [Yuxiang Fu](https://orcid.org/0009-0002-0471-2083), [Wuqi Wang](https://scholar.google.com/citations?hl=zh-CN&user=LTBq-4MAAAAJ), [Haigen Min](https://js.chd.edu.cn/xxgcxy/mhg/list.htm), [Wei Feng](https://cic.tju.edu.cn/faculty/fengwei/index.html), [Lei Ma](https://www.malei.org/), [Qing Guo](https://tsingqguo.github.io/)
+> [Renzhi Wang](https://renzhiwang.xyz/), [Yuxiang Fu](https://github.com/function-y-x), [Wuqi Wang](https://scholar.google.com/citations?hl=zh-CN&user=LTBq-4MAAAAJ), [Haigen Min](https://js.chd.edu.cn/xxgcxy/mhg/list.htm), [Wei Feng](https://cic.tju.edu.cn/faculty/fengwei/index.html), [Lei Ma](https://www.malei.org/), [Qing Guo](https://tsingqguo.github.io/)
 
 ## Overview
 
