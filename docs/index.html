@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving">
+  <meta name="description" content="We propose perception-aware optimization objectives for 3DGS-based autonomous driving reconstruction: a perception-aligned loss and an object zone quality loss, which keep perception-module outputs consistent while preserving visual quality.">
+  <meta name="keywords" content="3D Gaussian Splatting, autonomous driving, perception-aware reconstruction, 3DGS, scenario generation, object detection, perception stability, ADS testing">
+  <meta name="author" content="Renzhi Wang, Yuxiang Fu, Wuqi Wang, Haigen Min, Wei Feng, Lei Ma, Qing Guo">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="University of Alberta">
+  <meta property="og:title" content="Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving">
+  <meta property="og:description" content="Perception-aware optimization objectives for 3DGS-based autonomous driving reconstruction.">
+  <meta property="og:url" content="https://shanicky-renzhiwang.github.io/Perception-aware-3DGS/">
+  <meta property="og:image" content="static/images/social_preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Perception-aware 3DGS - Research Preview">
+  <meta property="article:published_time" content="2026-01-26T00:00:00.000Z">
+  <meta property="article:author" content="Renzhi Wang">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="3D Gaussian Splatting">
+  <meta property="article:tag" content="Autonomous Driving">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving">
+  <meta name="twitter:description" content="Perception-aware optimization objectives for 3DGS-based autonomous driving reconstruction.">
+  <meta name="twitter:image" content="static/images/social_preview.png">
+  <meta name="twitter:image:alt" content="Perception-aware 3DGS - Research Preview">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving">
+  <meta name="citation_author" content="Wang, Renzhi">
+  <meta name="citation_author" content="Fu, Yuxiang">
+  <meta name="citation_author" content="Wang, Wuqi">
+  <meta name="citation_author" content="Min, Haigen">
+  <meta name="citation_author" content="Feng, Wei">
+  <meta name="citation_author" content="Ma, Lei">
+  <meta name="citation_author" content="Guo, Qing">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="ICLR 2026">
+  <meta name="citation_pdf_url" content="https://openreview.net/pdf?id=PmQlMTBmpa">
+  
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving | ICLR 2026</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+  
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+  
+  <!-- Fonts - Optimized loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+  
+  <!-- Structured Data for Academic Papers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving",
+    "description": "Perception-aware optimization objectives for 3DGS-based autonomous driving reconstruction that keep perception-module outputs consistent while preserving visual quality.",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Renzhi Wang",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "University of Alberta"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Yuxiang Fu",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Nankai University"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Wuqi Wang",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Chang'an University"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Haigen Min",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Chang'an University"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Wei Feng",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Tianjin University"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Lei Ma",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "University of Alberta"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Qing Guo",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Nankai University"
+        }
+      }
+    ],
+    "datePublished": "2026-01-26",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ICLR 2026"
+    },
+    "url": "https://shanicky-renzhiwang.github.io/Perception-aware-3DGS/",
+    "image": "static/images/social_preview.png",
+    "keywords": ["3D Gaussian Splatting", "autonomous driving", "perception-aware reconstruction", "3DGS", "scenario generation", "object detection"],
+    "abstract": "Reconstruction techniques, such as 3D Gaussian Splatting (3DGS), are increasingly used to generate scenarios for autonomous driving system (ADS) research. Existing 3DGS-based approaches for autonomous-driving scenario generation have, through various optimizations, achieved high visual similarity in reconstructed scenes. However, this route is built on a strong assumption: that higher scene similarity directly translates into better preservation of ADS behaviour. Unfortunately, this assumption has not been effectively validated, and ADS behaviour is more closely related to objects within the field of view rather than the global image. Thus, we focus on the perception module - the entry point of ADS. Preliminary experiments reveal that although current methods can produce reconstructions with high overall similarity, they often fail to ensure that the perception module outputs remain consistent with those obtained from the original images. Such a limitation can significantly harm the applicability of reconstruction in the ADS domain. To address this gap, we propose two complementary solutions: a perception-aligned loss, which directly leverages output differences between reconstructed and ground-truth images during training; and an object zone quality loss, which specifically reinforces training on object locations identified by the perception model on ground-truth images. Experiments demonstrate that both of our methods improve the ability of reconstructed scenes to maintain consistency between the perception module outputs and the ground-truth inputs.",
+    "isAccessibleForFree": true,
+    "license": "https://creativecommons.org/licenses/by/4.0/"
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- More Works Dropdown -->
+  <div class="more-works-container">
+    <button class="more-works-btn" onclick="toggleMoreWorks()" title="View More Works from Our Lab">
+      <i class="fas fa-flask"></i>
+      More Works
+      <i class="fas fa-chevron-down dropdown-arrow"></i>
+    </button>
+    <div class="more-works-dropdown" id="moreWorksDropdown">
+      <div class="dropdown-header">
+        <h4>More Works from Our Lab</h4>
+        <button class="close-btn" onclick="toggleMoreWorks()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="works-list">
+        <a href="https://github.com/nnanhuang/S3Gaussian" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>S3Gaussian</h5>
+            <p>Self-Supervised Street Gaussians for Autonomous Driving (base method integrated in this work).</p>
+            <span class="work-venue">NeurIPS 2024</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <a href="https://github.com/ziyc/drivestudio" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>OmniRe / DriveStudio</h5>
+            <p>Holistic Scene Language for Gaussian Agent Modeling (base method integrated in this work).</p>
+            <span class="work-venue">CVPR 2025</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <a href="https://github.com/Shanicky-RenzhiWang/MoDitector" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>MoDitector</h5>
+            <p>Module-Directed Testing for Autonomous Driving Systems.</p>
+            <span class="work-venue">ISSTA 2025</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main id="main-content">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://renzhiwang.xyz/" target="_blank">Renzhi Wang</a><sup>1,2</sup>,</span>
+              <span class="author-block">
+                <a href="https://github.com/function-y-x" target="_blank">Yuxiang Fu</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?hl=zh-CN&user=LTBq-4MAAAAJ" target="_blank">Wuqi Wang</a><sup>3</sup>,</span>
+              <span class="author-block">
+                <a href="https://js.chd.edu.cn/xxgcxy/mhg/list.htm" target="_blank">Haigen Min</a><sup>3</sup>,</span>
+              <span class="author-block">
+                <a href="https://cic.tju.edu.cn/faculty/fengwei/index.html" target="_blank">Wei Feng</a><sup>4</sup>,</span>
+              <span class="author-block">
+                <a href="https://www.malei.org/" target="_blank">Lei Ma</a><sup>1,5</sup>,</span>
+              <span class="author-block">
+                <a href="https://tsingqguo.github.io/" target="_blank">Qing Guo</a><sup>2,6&#9993;</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>University of Alberta</span>
+              <span class="author-block"><sup>2</sup>VCIP, CS, Nankai University</span>
+              <span class="author-block"><sup>3</sup>Chang'an University</span>
+              <span class="author-block"><sup>4</sup>Tianjin University</span>
+              <span class="author-block"><sup>5</sup>The University of Tokyo</span>
+              <span class="author-block"><sup>6</sup>NKIARI, Shenzhen Futian</span>
+              <br>
+              <span class="author-block"><strong>ICLR 2026</strong></span>
+              <br>
+              <span class="eql-cntrb"><small><sup>&#9993;</sup>Corresponding author</small></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- Paper (OpenReview PDF) -->
+                <span class="link-block">
+                  <a href="https://openreview.net/pdf?id=PmQlMTBmpa" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <!-- GitHub Code -->
+              <span class="link-block">
+                <a href="https://github.com/Shanicky-RenzhiWang/Perception-aware-3DGS" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fab fa-github"></i>
+                </span>
+                <span>Code</span>
+              </a>
+            </span>
+
+            <!-- OpenReview -->
+            <span class="link-block">
+              <a href="https://openreview.net/forum?id=PmQlMTBmpa" target="_blank"
+              class="external-link button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="fa-solid fa-book-open"></i>
+              </span>
+              <span>OpenReview</span>
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Teaser image-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="static/images/teaser.png" alt="Teaser figure: perception-based loss and object zone quality loss ensure reconstructed images produce perception results consistent with the ground truth" style="width: 100%; height: auto;" loading="lazy"/>
+      <h2 class="subtitle has-text-centered">
+        We enhance perception stability in 3D reconstruction by introducing a <strong>perception-aligned loss</strong> and an <strong>object zone quality loss</strong>, ensuring that reconstructed images produce perception results consistent with the ground truth for reliable autonomous driving applications. The red box is the bounding box detected by the perception model.
+      </h2>
+    </div>
+  </div>
+</section>
+<!-- End teaser image -->
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Reconstruction techniques, such as 3D Gaussian Splatting (3DGS), are increasingly used to generate scenarios for autonomous driving system (ADS) research. Existing 3DGS-based approaches for autonomous-driving scenario generation have, through various optimizations, achieved high visual similarity in reconstructed scenes. However, this route is built on a strong assumption: that higher scene similarity directly translates into better preservation of ADS behaviour. Unfortunately, this assumption has not been effectively validated, and ADS behaviour is more closely related to objects within the field of view rather than the global image. Thus, we focus on the perception module&mdash;the entry point of ADS. Preliminary experiments reveal that although current methods can produce reconstructions with high overall similarity, they often fail to ensure that the perception module outputs remain consistent with those obtained from the original images. Such a limitation can significantly harm the applicability of reconstruction in the ADS domain. To address this gap, we propose two complementary solutions: a <strong>perception-aligned loss</strong>, which directly leverages output differences between reconstructed and ground-truth images during training; and an <strong>object zone quality loss</strong>, which specifically reinforces training on object locations identified by the perception model on ground-truth images. Experiments demonstrate that both of our methods improve the ability of reconstructed scenes to maintain consistency between the perception module outputs and the ground-truth inputs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+<!-- Preliminary study -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Preliminary Study: Visual Quality Does Not Guarantee Perception Stability</h2>
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              Mainstream street-scene reconstruction methods (e.g., S<sup>3</sup>Gaussian, OmniRe, EMD) optimize global image metrics such as SSIM, PSNR, and LPIPS, implicitly assuming that higher scene similarity directly translates into better preservation of ADS behaviour. We challenge this assumption from the perspective of the <em>perception module</em>&mdash;the entry point of every ADS.
+            </p>
+            <p>
+              We evaluate three state-of-the-art 3DGS approaches (S<sup>3</sup>Gaussian, OmniRe, and EMD built upon each base) with three detection models of different architectures (YOLOv8, Faster R-CNN, RT-DETR), measuring perception stability via <em>mean IoU</em> (detection differences), <em>mAP</em>@[0.5:0.95] (confidence and misclassification), and the number of <em>missed detections</em>. Although existing methods achieve high visual scores, their perception stability is far from satisfactory, and higher visual quality does not consistently translate into higher perception stability. The statistical correlation between pixel-level metrics and detection stability, though significant (<em>p</em> &lt; 5&times;10<sup>-3</sup>), remains weak (Pearson <em>r</em> &asymp; 0.3&ndash;0.6) and far from predictive.
+            </p>
+            <p>
+              Moreover, even with ground-truth inputs, perception modules can make errors. It is therefore not enough to reproduce only the correctly recognized objects&mdash;we also need to reproduce the errors that already exist, since the goal of reconstruction in ADS is to efficiently reveal the limitations of ADS perception for more effective system testing and improvement.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End preliminary study -->
+
+<!-- Methodology -->
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Methodology: Perception-aware 3DGS</h2>
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="publication-image">
+            <img src="static/images/overview.png" alt="Overview of the work: perception stability is measured by comparing the outputs of the same perception model on original vs. reconstructed frames; we design a perception-aligned loss and an object zone quality loss" style="width: 100%; height: auto;" loading="lazy"/>
+          </div>
+          <h2 class="subtitle has-text-centered">
+            Overview of this work. Perception stability is measured by comparing the outputs of the same perception model when fed with the original frames versus the reconstructed frames. Based on the perception outputs and the object regions identified by the perception model, we design a perception-aligned loss and an object zone quality loss.
+          </h2>
+          <div class="content has-text-justified" style="margin-top: 1.5rem;">
+            <p>
+              Formally, we formulate perception-aware reconstruction as a constrained optimization: preserve reconstruction quality while minimizing the perception discrepancy between the reconstruction <em>R</em>(<em>x</em>) and the ground truth <em>x</em>:
+            </p>
+            <p style="text-align: center; font-style: italic;">
+              min<sub>R</sub> E<sub>x</sub>[ d<sub>perc</sub>(P(R(x)), P(x)) ] &nbsp;&nbsp;s.t.&nbsp;&nbsp; E<sub>x</sub>[ d<sub>img</sub>(R(x), x) ] &le; &epsilon;
+            </p>
+            <p>
+              <strong>Method 1 &mdash; Perception-aligned Loss.</strong> A <em>frozen</em> perception model P (YOLOv8) runs on both the ground-truth frame and the rendered frame; training penalizes the discrepancy between P(R(x)) and P(x), combining a CIoU-based bounding-box term (penalizing overlap, center-point distance, and aspect-ratio deviations) with a classification term that penalizes label mismatches:
+            </p>
+            <p style="text-align: center; font-style: italic;">
+              L<sub>perc</sub> = &Sigma;<sub>i</sub> ( &lambda;<sub>box</sub> &middot; L<sub>box</sub>(B(x), B(R(x))) + &lambda;<sub>cls</sub> &middot; L<sub>cls</sub>(C(x), C(R(x))) )
+            </p>
+            <p>
+              The loss is integrated into the 3DGS training objective (applied in the fine-stage), and gradients flow only to the Gaussians&mdash;the perception model is never updated. The reference is P(x) rather than dataset labels: if the detector misses an object in the original frame, the ideal reconstruction reproduces that error, which is aligned with the goal of exposing perception flaws in ADS testing.
+            </p>
+            <p>
+              <strong>Method 2 &mdash; Object Zone Quality Loss.</strong> Studying failure cases, we observe two typical phenomena in existing reconstructions: <em>modelling fractures</em> (discontinuities in static object regions) and <em>object zone blur</em> (blurring in dynamic object regions). Both point to the low reconstruction quality of object zones, which occupy only a small area compared to the sky or buildings. Using <em>offline</em> ground-truth perception results as masks, the object zone quality loss computes a visual similarity loss only within the object zones:
+            </p>
+            <p style="text-align: center; font-style: italic;">
+              L<sub>obj-vis</sub> = d<sub>vis</sub>( R(x) &#8857; B(x), x &#8857; B(x) )
+            </p>
+            <p>
+              Because it relies solely on offline GT perception outputs, this approach avoids per-iteration detector inference and has negligible impact on training time compared to Method 1, while focusing the model on edges and textures critical for perception.
+            </p>
+            <p>
+              Both objectives are <em>plug-and-play</em>: they integrate with existing 3DGS-based driving pipelines including <a href="https://github.com/nnanhuang/S3Gaussian" target="_blank">S<sup>3</sup>Gaussian</a>, <a href="https://github.com/ziyc/drivestudio" target="_blank">OmniRe</a>, and EMD-based settings, and are enabled with a single command-line flag:
+            </p>
+          </div>
+          <div style="text-align: left; max-width: 720px; margin: 0 auto;">
+            <pre style="text-align: left;"><code># Method 1: Perception-aligned loss
+python train.py -s {SCENE_DATA_INFO} --port 6017 --expname "waymo" \
+    --model_path {MODEL_PATH} --use_obj_loss
+
+# Method 2: Object zone quality loss
+python train.py -s {SCENE_DATA_INFO} --port 6017 --expname "waymo" \
+    --model_path {MODEL_PATH} --use_perception_metric</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End methodology -->
+
+<!-- Experimental results -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Experimental Results</h2>
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="publication-image">
+            <img src="static/images/results_qualitative.png" alt="Qualitative comparison: perception model fails to maintain original outputs for S3Gaussian reconstruction, while integrating the perception-aligned loss improves perception consistency" style="width: 100%; height: auto;" loading="lazy"/>
+          </div>
+          <h2 class="subtitle has-text-centered">
+            Comparison of reconstructed frames for S<sup>3</sup>Gaussian: the perception model fails to maintain original outputs, whereas integrating the perception-aligned loss leads to improved perception consistency. <strong>(I)</strong> modelling fractures; <strong>(II)</strong> object zone blur.
+          </h2>
+
+          <div class="content has-text-justified" style="margin-top: 1.5rem;">
+            <p>
+              Experiments on the Waymo dataset show that both of our methods significantly improve the perception stability of 3DGS reconstructions across all base approaches:
+            </p>
+            <ul>
+              <li><strong>Perception stability:</strong> mAP and mean IoU improve across all bases, with missed detections reduced to zero in most configurations.</li>
+              <li><strong>Black-box generalization:</strong> the same trend is observed on unseen detectors (Faster R-CNN, RT-DETR) besides the YOLOv8 used during training, indicating a genuine enhancement of reconstruction quality rather than overfitting to the training detector.</li>
+              <li><strong>Visual quality preserved:</strong> global SSIM fluctuates by less than &plusmn;1%, while object-zone SSIM clearly improves&mdash;the object zone quality loss even benefits overall visual quality.</li>
+              <li><strong>Combining both losses</strong> yields the best results in most cases.</li>
+            </ul>
+          </div>
+
+          <h3 class="title is-4" style="margin-top: 2rem;">Main Results (YOLOv8)</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Perception-aligned loss (L<sub>perc</sub>) and object zone quality loss (L<sub>obj-vis</sub>) integrated into four base approaches. All loss weights set to 1. Results are averages across all scenes.
+          </p>
+          <div style="overflow-x: auto;">
+            <table class="table is-striped is-hoverable" style="width: 100%; font-size: 0.9rem;">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>SSIM &#8593;</th>
+                  <th>Obj SSIM &#8593;</th>
+                  <th>PSNR &#8593;</th>
+                  <th>LPIPS &#8595;</th>
+                  <th>mAP &#8593;</th>
+                  <th>mean IoU &#8593;</th>
+                  <th>Miss &#8595;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>S<sup>3</sup>Gaussian</td><td>0.924</td><td>0.877</td><td>31.27</td><td>0.106</td><td>0.550</td><td>0.803</td><td>1.5</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>perc</sub></td><td>0.920</td><td>0.897</td><td>31.53</td><td>0.106</td><td>0.593</td><td>0.840</td><td>0.83</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>obj-vis</sub></td><td>0.937</td><td>0.921</td><td>31.89</td><td>0.082</td><td>0.672</td><td>0.862</td><td>0.4</td></tr>
+                <tr style="font-weight: 600;"><td>&nbsp;&nbsp;+ both</td><td><strong>0.941</strong></td><td><strong>0.924</strong></td><td><strong>32.00</strong></td><td><strong>0.083</strong></td><td><strong>0.700</strong></td><td><strong>0.872</strong></td><td><strong>0.0</strong></td></tr>
+                <tr><td>OmniRe</td><td>0.953</td><td>0.867</td><td>33.77</td><td>0.049</td><td>0.489</td><td>0.832</td><td>0.0</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>perc</sub></td><td>0.954</td><td>0.876</td><td>33.75</td><td>0.048</td><td>0.507</td><td>0.845</td><td>0.0</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>obj-vis</sub></td><td>0.949</td><td>0.893</td><td>33.25</td><td>0.046</td><td>0.545</td><td>0.856</td><td>0.0</td></tr>
+                <tr style="font-weight: 600;"><td>&nbsp;&nbsp;+ both</td><td><strong>0.957</strong></td><td><strong>0.899</strong></td><td><strong>33.75</strong></td><td><strong>0.047</strong></td><td><strong>0.609</strong></td><td><strong>0.870</strong></td><td><strong>0.0</strong></td></tr>
+                <tr><td>EMD(S<sup>3</sup>G)</td><td>0.923</td><td>0.855</td><td>32.89</td><td>0.057</td><td>0.578</td><td>0.755</td><td>0.0</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>perc</sub></td><td>0.951</td><td>0.923</td><td>33.37</td><td>0.046</td><td>0.583</td><td>0.857</td><td>0.0</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>obj-vis</sub></td><td>0.952</td><td>0.946</td><td>33.56</td><td>0.043</td><td>0.601</td><td>0.843</td><td>0.0</td></tr>
+                <tr style="font-weight: 600;"><td>&nbsp;&nbsp;+ both</td><td><strong>0.952</strong></td><td><strong>0.948</strong></td><td><strong>33.49</strong></td><td><strong>0.043</strong></td><td><strong>0.600</strong></td><td><strong>0.860</strong></td><td><strong>0.0</strong></td></tr>
+                <tr><td>EMD(OmniRe)</td><td>0.962</td><td>0.910</td><td>35.02</td><td>0.039</td><td>0.452</td><td>0.839</td><td>0.3</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>perc</sub></td><td>0.954</td><td>0.915</td><td>35.42</td><td>0.035</td><td>0.497</td><td>0.846</td><td>0.0</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>obj-vis</sub></td><td>0.965</td><td>0.942</td><td>35.20</td><td>0.034</td><td>0.508</td><td>0.856</td><td>0.0</td></tr>
+                <tr style="font-weight: 600;"><td>&nbsp;&nbsp;+ both</td><td><strong>0.969</strong></td><td><strong>0.940</strong></td><td><strong>35.33</strong></td><td><strong>0.035</strong></td><td><strong>0.510</strong></td><td><strong>0.856</strong></td><td><strong>0.0</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="title is-4" style="margin-top: 2rem;">Black-box Generalization (S<sup>3</sup>Gaussian)</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Testing on unseen detectors Faster R-CNN and RT-DETR, while YOLOv8 is used as the guidance model during training.
+          </p>
+          <div style="overflow-x: auto;">
+            <table class="table is-striped is-hoverable" style="width: 100%; font-size: 0.9rem;">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th colspan="3">Faster R-CNN</th>
+                  <th colspan="3">RT-DETR</th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th>mAP &#8593;</th><th>mean IoU &#8593;</th><th>Miss &#8595;</th>
+                  <th>mAP &#8593;</th><th>mean IoU &#8593;</th><th>Miss &#8595;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>S<sup>3</sup>Gaussian</td><td>0.171</td><td>0.620</td><td>2.0</td><td>0.494</td><td>0.829</td><td>0.0</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>perc</sub></td><td>0.229</td><td>0.632</td><td>0.7</td><td>0.509</td><td>0.829</td><td>0.0</td></tr>
+                <tr><td>&nbsp;&nbsp;+ L<sub>obj-vis</sub></td><td>0.271</td><td>0.689</td><td>0.4</td><td>0.603</td><td>0.843</td><td>0.0</td></tr>
+                <tr style="font-weight: 600;"><td>&nbsp;&nbsp;+ both</td><td>0.269</td><td><strong>0.695</strong></td><td>0.3</td><td><strong>0.610</strong></td><td><strong>0.845</strong></td><td>0.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="title is-4" style="margin-top: 2rem;">Runtime Analysis</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Average reconstruction training time on an RTX A5000 GPU. L<sub>perc</sub> requires an additional detector inference every iteration; L<sub>obj-vis</sub> relies on offline masks and has negligible overhead.
+          </p>
+          <div style="overflow-x: auto;">
+            <table class="table is-striped is-hoverable" style="width: 100%; font-size: 0.9rem;">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th colspan="3">per 100 epochs (s)</th>
+                  <th colspan="3">in total (min)</th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th>origin</th><th>+ L<sub>perc</sub></th><th>+ L<sub>obj-vis</sub></th>
+                  <th>origin</th><th>+ L<sub>perc</sub></th><th>+ L<sub>obj-vis</sub></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>S<sup>3</sup>Gaussian</td><td>25.20</td><td>26.67</td><td>25.30</td><td>204.4</td><td>232.2</td><td>205.4</td></tr>
+                <tr><td>OmniRe</td><td>34.84</td><td>36.07</td><td>34.91</td><td>282.1</td><td>332.2</td><td>283.5</td></tr>
+                <tr><td>EMD(S<sup>3</sup>G)</td><td>32.44</td><td>33.94</td><td>32.51</td><td>262.9</td><td>312.9</td><td>263.9</td></tr>
+                <tr><td>EMD(OmniRe)</td><td>44.94</td><td>46.45</td><td>45.00</td><td>364.5</td><td>413.2</td><td>364.9</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="color: var(--text-light); font-size: 0.85rem; margin-top: 1rem;">
+            All results are reproduced from the paper. See the paper for the full tables and additional analysis.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End experimental results -->
+
+<!-- BibTeX citation -->
+<section class="section is-light" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <div class="bibtex-header">
+      <h2 class="title">BibTeX</h2>
+      <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+        <i class="fas fa-copy"></i>
+        <span class="copy-text">Copy</span>
+      </button>
+    </div>
+    <pre id="bibtex-code"><code>@inproceedings{wang2026perceptionaware,
+  title={Beyond Visual Reconstruction Quality: Object Perception-aware 3D Gaussian Splatting for Autonomous Driving},
+  author={Wang, Renzhi and Fu, Yuxiang and Wang, Wuqi and Min, Haigen and Feng, Wei and Ma, Lei and Guo, Qing},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2026},
+  url={https://openreview.net/forum?id=PmQlMTBmpa}
+}</code></pre>
+  </div>
+</section>
+<!-- End BibTeX citation -->
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
